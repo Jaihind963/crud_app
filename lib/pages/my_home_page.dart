@@ -11,6 +11,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  TextEditingController nameController = new TextEditingController();
+  TextEditingController ageController = new TextEditingController();
+  TextEditingController locationController = new TextEditingController();
   Stream? employeeStream;
   getontheload() async {
     employeeStream = await DatabaseMethod().getEmployeeDetails();
@@ -44,26 +47,58 @@ class _MyHomePageState extends State<MyHomePage> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              "Name:${ds["Name"]}",
-                              style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.blue),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Name: ${ds["Name"]}",
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    nameController.text = ds["Name"];
+                                    ageController.text = ds['Age'];
+                                    locationController.text = ds["Location"];
+                                    editEmployeeDetails(ds["Id"]);
+                                  },
+                                  icon: const Icon(
+                                    Icons.edit,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ],
                             ),
                             Text(
-                              "Age:${ds["Age"]}",
+                              "Age: ${ds["Age"]}",
                               style: const TextStyle(
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                   color: Colors.orange),
                             ),
-                            Text(
-                              "Location:${ds["Location"]}",
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: Colors.blue),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "Location: ${ds["Location"]}",
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+                                      color: Colors.blue),
+                                ),
+                                IconButton(
+                                  onPressed: () async {
+                                    await DatabaseMethod()
+                                        .deleteEmployee(ds["Id"]);
+                                  },
+                                  icon: const Icon(
+                                    Icons.delete,
+                                    color: Colors.orange,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -123,4 +158,119 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
     );
   }
+
+  Future editEmployeeDetails(String id) => showDialog(
+        context: context,
+        builder: (context) => SingleChildScrollView(
+          scrollDirection: Axis.vertical,
+          child: AlertDialog(
+            content: Container(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Edit Details",
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.orange),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.cancel,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  const Text(
+                    "Name",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontSize: 20),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Age",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: ageController,
+                    decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  const Text(
+                    "Location",
+                    style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black),
+                  ),
+                  const SizedBox(height: 10),
+                  TextField(
+                    controller: locationController,
+                    decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.black),
+                      ),
+                      enabledBorder: OutlineInputBorder(),
+                    ),
+                  ),
+                  const SizedBox(height: 25),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Map<String, dynamic> updateInfo = {
+                          "Name": nameController.text,
+                          "Age": ageController.text,
+                          "Id": id,
+                          "Location": locationController.text,
+                        };
+                        await DatabaseMethod()
+                            .updateEmployeDetails(id, updateInfo)
+                            .then((value) => Navigator.pop(context));
+                      },
+                      child: const Text(
+                        "Update",
+                        style: TextStyle(fontSize: 15, color: Colors.black),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      );
 }
