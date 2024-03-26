@@ -36,7 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 itemBuilder: (context, index) {
                   DocumentSnapshot ds = snapshot.data.docs[index];
                   return Container(
-                    margin: EdgeInsets.only(bottom: 10),
+                    margin: const EdgeInsets.only(bottom: 10),
                     child: Material(
                       elevation: 5,
                       borderRadius: BorderRadius.circular(10),
@@ -53,6 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Text(
                                   "Name: ${ds["Name"]}",
                                   style: const TextStyle(
+                                      overflow: TextOverflow.ellipsis,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
                                       color: Colors.blue),
@@ -164,111 +165,109 @@ class _MyHomePageState extends State<MyHomePage> {
         builder: (context) => SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: AlertDialog(
-            content: Container(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text(
-                        "Edit Details",
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange),
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.cancel,
-                          color: Colors.red,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    "Name",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 20),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: nameController,
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      "Edit Details",
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.orange),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Age",
-                    style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: ageController,
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    "Location",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                        color: Colors.black),
-                  ),
-                  const SizedBox(height: 10),
-                  TextField(
-                    controller: locationController,
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black),
-                      ),
-                      enabledBorder: OutlineInputBorder(),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        Map<String, dynamic> updateInfo = {
-                          "Name": nameController.text,
-                          "Age": ageController.text,
-                          "Id": id,
-                          "Location": locationController.text,
-                        };
-                        await DatabaseMethod()
-                            .updateEmployeDetails(id, updateInfo)
-                            .then((value) => Navigator.pop(context));
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
                       },
-                      child: const Text(
-                        "Update",
-                        style: TextStyle(fontSize: 15, color: Colors.black),
+                      icon: const Icon(
+                        Icons.cancel,
+                        color: Colors.red,
                       ),
                     ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+                const Text(
+                  "Name",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontSize: 20),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: nameController,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Age",
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: ageController,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.grey),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Location",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black),
+                ),
+                const SizedBox(height: 10),
+                TextField(
+                  controller: locationController,
+                  decoration: const InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.black),
+                    ),
+                    enabledBorder: OutlineInputBorder(),
+                  ),
+                ),
+                const SizedBox(height: 25),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      Map<String, dynamic> updateInfo = {
+                        "Name": nameController.text,
+                        "Age": ageController.text,
+                        "Id": id,
+                        "Location": locationController.text,
+                      };
+                      await DatabaseMethod()
+                          .updateEmployeDetails(id, updateInfo)
+                          .then((value) => Navigator.pop(context));
+                    },
+                    child: const Text(
+                      "Update",
+                      style: TextStyle(fontSize: 15, color: Colors.black),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),

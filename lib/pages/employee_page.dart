@@ -11,9 +11,9 @@ class EmployeePage extends StatefulWidget {
 }
 
 class _EmployeePageState extends State<EmployeePage> {
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController ageController = new TextEditingController();
-  TextEditingController locationController = new TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,6 +52,7 @@ class _EmployeePageState extends State<EmployeePage> {
             ),
             const SizedBox(height: 10),
             TextField(
+              maxLength: 20,
               controller: nameController,
               decoration: const InputDecoration(
                 focusedBorder: OutlineInputBorder(
@@ -104,15 +105,15 @@ class _EmployeePageState extends State<EmployeePage> {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
-                  String Id = randomAlphaNumeric(10);
+                  String id = randomAlphaNumeric(10);
                   Map<String, dynamic> employeInfoMap = {
                     "Name": nameController.text,
                     "Age": ageController.text,
-                    "Id": Id,
+                    "Id": id,
                     "Location": locationController.text,
                   };
                   await DatabaseMethod()
-                      .addEmployeeDetails(employeInfoMap, Id)
+                      .addEmployeeDetails(employeInfoMap, id)
                       .then((value) {
                     Fluttertoast.showToast(
                         msg: "Employee successfully added",
