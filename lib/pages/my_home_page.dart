@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_app/pages/employee_page.dart';
 import 'package:crud_app/services/databasemethod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -11,9 +12,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  TextEditingController nameController = new TextEditingController();
-  TextEditingController ageController = new TextEditingController();
-  TextEditingController locationController = new TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController ageController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
   Stream? employeeStream;
   getontheload() async {
     employeeStream = await DatabaseMethod().getEmployeeDetails();
@@ -127,23 +128,30 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
       appBar: AppBar(
-        title: const Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
+            const Spacer(),
+            const Text(
               "Flutter",
               style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: Colors.blue),
             ),
-            Text(
+            const Text(
               "Firebase",
               style: TextStyle(
                   fontSize: 24,
                   color: Colors.orange,
                   fontWeight: FontWeight.bold),
-            )
+            ),
+            const Spacer(),
+            IconButton(
+                onPressed: () async {
+                  await FirebaseAuth.instance.signOut();
+                },
+                icon: const Icon(Icons.logout_outlined))
           ],
         ),
       ),
